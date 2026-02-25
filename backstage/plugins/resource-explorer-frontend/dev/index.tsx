@@ -1,11 +1,11 @@
 import { createDevApp } from '@backstage/dev-utils';
-import { resourceExplorerFrontendPlugin, ResourceExplorerFrontendPage } from '../src/plugin';
+import { ccdResourceExplorerPlugin, CcdResourceExplorerPage } from '../src/plugin';
 
 createDevApp()
-  .registerPlugin(resourceExplorerFrontendPlugin)
+  .registerPlugin(ccdResourceExplorerPlugin)
   .addPage({
-    element: <ResourceExplorerFrontendPage />,
+    element: <CcdResourceExplorerPage />,
     title: 'Root Page',
-    path: '/resource-explorer-frontend',
+    path: '/ccd-resource-explorer',
   })
   .render();

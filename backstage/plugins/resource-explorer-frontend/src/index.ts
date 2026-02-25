@@ -1,1 +1,2 @@
-export { resourceExplorerFrontendPlugin, ResourceExplorerFrontendPage } from './plugin';
+export {plugin} from './plugin';
+export {CcdResourceExplorerPage, CcdResourceExplorerPage as ResourceExplorerFrontendPage} from './components/CcdResourceExplorerPage';

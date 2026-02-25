@@ -1,67 +1,68 @@
-import {
-  mockCredentials,
-  mockErrorHandler,
-  mockServices,
-} from '@backstage/backend-test-utils';
+import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import express from 'express';
 import request from 'supertest';
-
 import { createRouter } from './router';
-import { TodoListService } from './services/TodoListService/types';
 
-const mockTodoItem = {
-  title: 'Do the thing',
-  id: '123',
-  createdBy: mockCredentials.user().principal.userEntityRef,
-  createdAt: new Date().toISOString(),
-};
-
-// TEMPLATE NOTE:
-// Testing the router directly allows you to write a unit test that mocks the provided options.
 describe('createRouter', () => {
-  let app: express.Express;
-  let todoListService: jest.Mocked<TodoListService>;
+  let app: express.Application;
 
-  beforeEach(async () => {
-    todoListService = {
-      createTodo: jest.fn(),
-      listTodos: jest.fn(),
-      getTodo: jest.fn(),
-    };
+  beforeAll(async () => {
+    const logger = getVoidLogger();
+    const config = mockServices.rootConfig();
+    const httpAuth = mockServices.httpAuth();
+
     const router = await createRouter({
-      httpAuth: mockServices.httpAuth(),
-      todoListService,
-    });
-    app = express();
-    app.use(router);
-    app.use(mockErrorHandler());
-  });
-
-  it('should create a TODO', async () => {
-    todoListService.createTodo.mockResolvedValue(mockTodoItem);
-
-    const response = await request(app).post('/todos').send({
-      title: 'Do the thing',
+      logger,
+      config,
+      httpAuth,
     });
 
-    expect(response.status).toBe(201);
-    expect(response.body).toEqual(mockTodoItem);
+    app = express().use(router);
   });
 
-  it('should not allow unauthenticated requests to create a TODO', async () => {
-    todoListService.createTodo.mockResolvedValue(mockTodoItem);
+  it('should return ok on health check', async () => {
+    const response = await request(app).get('/health');
 
-    // TEMPLATE NOTE:
-    // The HttpAuth mock service considers all requests to be authenticated as a
-    // mock user by default. In order to test other cases we need to explicitly
-    // pass an authorization header with mock credentials.
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ status: 'ok' });
+  });
+
+  it('should return 400 on missing provider', async () => {
     const response = await request(app)
-      .post('/todos')
-      .set('Authorization', mockCredentials.none.header())
+      .post('/resources')
       .send({
-        title: 'Do the thing',
+        service: 'EC2',
+        region: 'us-east-1',
       });
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+  });
+
+  it('should return 400 on missing service', async () => {
+    const response = await request(app)
+      .post('/resources')
+      .send({
+        provider: 'AWS',
+        region: 'us-east-1',
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+  });
+
+
+
+  it('should return 400 on missing region', async () => {
+    const response = await request(app)
+      .post('/resources')
+      .send({
+        provider: 'AWS',
+        service: 'EC2',
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
   });
 });

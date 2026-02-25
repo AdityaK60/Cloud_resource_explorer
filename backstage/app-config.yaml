@@ -114,3 +114,46 @@ kubernetes:
 permission:
   # setting this to `false` will disable permissions
   enabled: true
+
+# CCD Resource Explorer Plugin Configuration
+# Configure your cloud provider API endpoints here
+ccdResourceExplorer:
+  aws:
+    accessKeyId: ${AWS_ACCESS_KEY_ID}
+    secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+    sessionToken: ${AWS_SESSION_TOKEN}
+    region: us-east-1
+    rds:
+      # API endpoint for listing RDS instances
+      url: ${CCD_AWS_RDS_URL}
+      # API endpoint for RDS instance actions (start/stop/reboot)
+      actionUrl: ${CCD_AWS_RDS_ACTION_URL}
+      # Request timeout in milliseconds (default: 30000)
+      timeout: 30000
+  gcp:
+    compute:
+      # API endpoint for listing GCP Compute instances
+      url: ${CCD_GCP_COMPUTE_URL}
+      # API endpoint for GCP Compute instance actions
+      actionUrl: ${CCD_GCP_COMPUTE_ACTION_URL}
+      # Authentication token for GCP Compute API
+      token: ${CCD_GCP_COMPUTE_TOKEN}
+      # Request timeout in milliseconds (default: 30000)
+      timeout: 30000
+    projects:
+      # API endpoint for listing GCP projects
+      url: ${CCD_GCP_PROJECTS_URL}
+      # Authentication token for GCP Projects API
+      token: ${CCD_GCP_PROJECTS_TOKEN}
+      # Request timeout in milliseconds (default: 30000)
+      timeout: 30000
+  azure:
+    vm:
+      # API endpoint for listing Azure VMs
+      url: ${CCD_AZURE_VM_URL}
+      # API endpoint for Azure VM actions
+      actionUrl: ${CCD_AZURE_VM_ACTION_URL}
+      # Authentication token for Azure VM API
+      token: ${CCD_AZURE_VM_TOKEN}
+      # Request timeout in milliseconds (default: 30000)
+      timeout: 30000

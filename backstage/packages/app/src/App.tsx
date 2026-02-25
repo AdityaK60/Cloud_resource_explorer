@@ -95,7 +95,7 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
-    <Route path="/resource-explorer-frontend" element={<ResourceExplorerFrontendPage />} />
+    <Route path="/ccd-resource-explorer" element={<ResourceExplorerFrontendPage />} />
   </FlatRoutes>
 );
 

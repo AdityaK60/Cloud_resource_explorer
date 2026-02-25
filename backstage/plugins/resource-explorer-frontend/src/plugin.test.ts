@@ -1,7 +1,7 @@
-import { resourceExplorerFrontendPlugin } from './plugin';
+import { ccdResourceExplorerPlugin } from './plugin';
 
-describe('resource-explorer-frontend', () => {
+describe('ccd-resource-explorer', () => {
   it('should export plugin', () => {
-    expect(resourceExplorerFrontendPlugin).toBeDefined();
+    expect(ccdResourceExplorerPlugin).toBeDefined();
   });
 });
