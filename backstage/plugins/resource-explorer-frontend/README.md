@@ -1,12 +1,12 @@
-# resource-explorer-frontend
+# ccd-resource-explorer
 
-Welcome to the resource-explorer-frontend plugin!
+Welcome to the ccd-resource-explorer plugin!
 
 _This plugin was created through the Backstage CLI_
 
 ## Getting started
 
-Your plugin has been added to the example app in this repository, meaning you'll be able to access it by running `yarn start` in the root directory, and then navigating to [/resource-explorer-frontend](http://localhost:3000/resource-explorer-frontend).
+Your plugin has been added to the example app in this repository, meaning you'll be able to access it by running `yarn start` in the root directory, and then navigating to [/ccd-resource-explorer](http://localhost:3000/ccd-resource-explorer).
 
 You can also serve the plugin in isolation by running `yarn start` in the plugin directory.
 This method of serving the plugin provides quicker iteration speed and a faster startup and hot reloads.

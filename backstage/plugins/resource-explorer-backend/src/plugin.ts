@@ -3,36 +3,57 @@ import {
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
 import { createRouter } from './router';
-import { catalogServiceRef } from '@backstage/plugin-catalog-node';
-import { createTodoListService } from './services/TodoListService';
 
 /**
- * resourceExplorerPlugin backend plugin
+ * CCD Resource Explorer backend plugin
  *
  * @public
  */
-export const resourceExplorerPlugin = createBackendPlugin({
-  pluginId: 'resource-explorer',
+export const ccdResourceExplorerPlugin = createBackendPlugin({
+  pluginId: 'ccd-resource-explorer',
   register(env) {
     env.registerInit({
       deps: {
         logger: coreServices.logger,
-        httpAuth: coreServices.httpAuth,
+        config: coreServices.rootConfig,
         httpRouter: coreServices.httpRouter,
-        catalog: catalogServiceRef,
+        httpAuth: coreServices.httpAuth,
       },
-      async init({ logger, httpAuth, httpRouter, catalog }) {
-        const todoListService = await createTodoListService({
-          logger,
-          catalog,
+      async init({ logger, config, httpRouter, httpAuth }) {
+        logger.info('Initializing CCD Resource Explorer backend plugin');
+
+        // Set auth policies first, before mounting the router
+        httpRouter.addAuthPolicy({
+          path: '/health',
+          allow: 'unauthenticated'
+        });
+        httpRouter.addAuthPolicy({
+          path: '/resources',
+          allow: 'unauthenticated'
+        });
+        httpRouter.addAuthPolicy({
+          path: '/ec2-action',
+          allow: 'unauthenticated'
+        });
+        httpRouter.addAuthPolicy({
+          path: '/rds-action',
+          allow: 'unauthenticated'
+        });
+        httpRouter.addAuthPolicy({
+          path: '/gcp-action',
+          allow: 'unauthenticated'
         });
 
-        httpRouter.use(
-          await createRouter({
-            httpAuth,
-            todoListService,
-          }),
-        );
+        // Create and mount the router
+        const router = await createRouter({
+          logger,
+          config,
+          httpAuth,
+        });
+
+        httpRouter.use(router);
+
+        logger.info('CCD Resource Explorer backend plugin initialized successfully');
       },
     });
   },

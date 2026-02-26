@@ -1,22 +1,12 @@
-import {
-  createPlugin,
-  createRoutableExtension,
-} from '@backstage/core-plugin-api';
+import { createPlugin, createRouteRef } from '@backstage/core-plugin-api';
 
-import { rootRouteRef } from './routes';
+export const rootRouteRef = createRouteRef({
+  id: 'ccd-resource-explorer',
+});
 
-export const resourceExplorerFrontendPlugin = createPlugin({
-  id: 'resource-explorer-frontend',
+export const plugin = createPlugin({
+  id: 'ccd-resource-explorer',
   routes: {
     root: rootRouteRef,
   },
 });
-
-export const ResourceExplorerFrontendPage = resourceExplorerFrontendPlugin.provide(
-  createRoutableExtension({
-    name: 'ResourceExplorerFrontendPage',
-    component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
-    mountPoint: rootRouteRef,
-  }),
-);
